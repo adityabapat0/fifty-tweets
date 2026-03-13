@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Digest — {{ date }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #ffffff;
+      color: #111111;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 2px solid #111111;
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .header-inner {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .masthead {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .masthead span {
+      font-weight: 400;
+      font-style: italic;
+      opacity: 0.45;
+    }
+    .dateline {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888888;
+      font-weight: 500;
+    }
+
+    .meta-bar {
+      max-width: 620px;
+      margin: 0 auto 2rem;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.73rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888888;
+      font-weight: 500;
+      border: 1px solid #e8e8e8;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+    .count-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .refresh-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.73rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888888;
+      font-weight: 500;
+      border: 1px solid #e8e8e8;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+    .refresh-badge::before {
+      content: '🕛';
+      font-size: 0.75rem;
+    }
+
+    .feed {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .tweet-row {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      opacity: 0;
+      animation: fadeUp 0.3s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .tweet-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      color: #cccccc;
+      padding-top: 1.2rem;
+      text-align: right;
+      user-select: none;
+    }
+
+    .tweet-embed { min-width: 0; }
+    .tweet-embed .twitter-tweet {
+      margin: 0 !important;
+      width: 100% !important;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 4rem 0;
+      color: #888888;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      border-top: 1px solid #e8e8e8;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #aaaaaa;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tweet-row:nth-child(1)  { animation-delay: 0.00s; }
+    .tweet-row:nth-child(2)  { animation-delay: 0.03s; }
+    .tweet-row:nth-child(3)  { animation-delay: 0.06s; }
+    .tweet-row:nth-child(4)  { animation-delay: 0.09s; }
+    .tweet-row:nth-child(5)  { animation-delay: 0.12s; }
+    .tweet-row:nth-child(6)  { animation-delay: 0.15s; }
+    .tweet-row:nth-child(7)  { animation-delay: 0.18s; }
+    .tweet-row:nth-child(8)  { animation-delay: 0.21s; }
+    .tweet-row:nth-child(9)  { animation-delay: 0.24s; }
+    .tweet-row:nth-child(10) { animation-delay: 0.27s; }
+    .tweet-row:nth-child(n+11) { animation-delay: 0.30s; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="masthead">Daily <span>Digest</span></div>
+    <div class="dateline">{{ date }}</div>
+  </div>
+</header>
+
+<div class="meta-bar">
+  <span class="count-badge">{{ tweets|length }} tweets · latest first</span>
+  <span class="refresh-badge">refreshes in {{ next_refresh }} (midnight IST)</span>
+</div>
+
+<div class="feed">
+  {% if tweets %}
+    {% for tweet in tweets %}
+    <div class="tweet-row">
+      <div class="tweet-num">{{ loop.index }}</div>
+      <div class="tweet-embed">
+        <blockquote class="twitter-tweet" data-theme="light" data-dnt="true">
+          <a href="https://twitter.com/{{ tweet.author.userName }}/status/{{ tweet.id }}"></a>
+        </blockquote>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No tweets yet. Check back at midnight IST.</div>
+  {% endif %}
+</div>
+
+<footer>Daily Digest &middot; {{ date }} &middot; refreshes every night at 12:00 AM IST</footer>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</body>
+</html>
