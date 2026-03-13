@@ -7,7 +7,10 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 import pytz
 
-load_dotenv('secretkeys.env')
+print(f"[debug] API_KEY loaded: {bool(os.getenv('API_KEY'))}")
+print(f"[debug] COOKIE loaded: {bool(os.getenv('TWITTER_COOKIE'))}")
+print(f"[debug] PROXY loaded: {bool(os.getenv('PROXY'))}")
+load_dotenv('secretkeys.env', override=False)
 
 app = Flask(__name__)
 
