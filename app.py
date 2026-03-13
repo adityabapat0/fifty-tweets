@@ -44,6 +44,8 @@ def fetch_tweets(count=50):
                 headers=headers,
                 timeout=15
             )
+            print(f"[api] status: {response.status_code}")
+            print(f"[api] response: {response.text[:300]}")
             data = response.json()
             tweets = data.get('data', {}).get('tweets', [])
             all_tweets.extend(tweets)
@@ -54,7 +56,8 @@ def fetch_tweets(count=50):
             if not has_next or not cursor:
                 break
         except Exception as e:
-            print(f"[fetch error] {e}")
+            
+            print(f"[fetch error] {type(e).__name__}: {e}")
             break
 
     def parse_date(tweet):
